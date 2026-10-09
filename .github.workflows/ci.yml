@@ -1,2 +1,20 @@
-nombre:  CI básico  en: push: ramas: [ "main" ] pull_request: ramas: [ "main" ] trabajos: build: se ejecuta en: ubuntu-latest pasos: - usa: actions/checkout@v3 - nombre: Configurar Node.js usa: actions/setup-node@v3 con: node-version: '24.x' # O la versión de Node.js que desee - nombre: Instalar dependencias ejecutar: npm install - nombre: Ejecutar pruebas ejecutar: npm test
+nombre:  CI/CD  a  Azure  App  Service 
 
+en: 
+  push: 
+    ramas: [ "main" ] 
+  pull_request: 
+    ramas: [ "main" ] 
+
+trabajos: 
+  build: 
+    runs-on:  ubuntu-latest 
+
+    pasos: 
+      -  usa:  actions/checkout@v3 
+      -  nombre:  Configurar  Node.js  usa: actions/setup-node@v3 con: node-version: ${ { secrets.NODE_VERSION || '18.x' }} 
+      - nombre: Instalar dependencias run: npm install - nombre: Ejecutar pruebas run: npm test deploy: needs: build 
+      # Asegurarse de que el trabajo 'build' se complete correctamente primero runs-on: ubuntu-latest environment: nombre: Producción url: ${{ steps.deploy-to-webapp.outputs.webapp-url }} steps: 
+      - nombre: Código de checkout uses: actions/checkout@v3 
+      - nombre: Inicio de sesión de Azure uses: azure/login@v1 with: creds: ${{ secrets.AZURE_CREDENTIALS }} 
+      - nombre: Implementar en Azure Web App id: deploy-to-webapp uses: azure/webapps-deploy@v2 with: app-name: ${{ secrets.AZURE_APP_NAME }} package: . # Implementar el directorio actual
