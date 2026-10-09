@@ -1,0 +1,2 @@
+nombre:  CI básico  en: push: ramas: [ "main" ] pull_request: ramas: [ "main" ] trabajos: build: se ejecuta en: ubuntu-latest pasos: - usa: actions/checkout@v3 - nombre: Configurar Node.js usa: actions/setup-node@v3 con: node-version: '24.x' # O la versión de Node.js que desee - nombre: Instalar dependencias ejecutar: npm install - nombre: Ejecutar pruebas ejecutar: npm test
+
