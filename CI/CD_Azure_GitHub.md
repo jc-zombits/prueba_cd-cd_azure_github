@@ -84,3 +84,22 @@
 - Entorno: Define un entorno para el despliegue. Esto es opcional, pero útil para realizar un seguimiento de los despliegues en GitHub.
 - azure/login@v1: Inicia sesión en Azure utilizando las credenciales almacenadas en el secreto AZURE_CREDENTIALS.
 - azure/webapps-deploy@v2: Implementa el código en el Servicio de aplicaciones de Azure especificado por app-name. El paquete: . especifica que se implementa todo el repositorio.
+
+
+nombre:  CI/CD  a  Azure  App  Service 
+
+en: 
+  push: 
+    ramas: [ "main" ] 
+  pull_request: 
+    ramas: [ "main" ] 
+
+trabajos: 
+  build: 
+    runs-on:  ubuntu-latest 
+
+    pasos: 
+      -  usa:  actions/checkout@v3 
+      -  nombre:  Configurar  Node.js  usa: actions/setup-node@v3 con: node-version: ${ { secrets.NODE_VERSION || '18.x' }} - nombre: Instalar dependencias run: npm install - nombre: Ejecutar pruebas run: npm test deploy: needs: build # Asegurarse de que el trabajo 'build' se complete correctamente primero runs-on: ubuntu-latest environment: nombre: Producción url: ${{ steps.deploy-to-webapp.outputs.webapp-url }} steps: - nombre: Código de checkout uses: actions/checkout@v3 - nombre: Inicio de sesión de Azure uses: azure/login@v1 with: creds: ${{ secrets.AZURE_CREDENTIALS }} - nombre: Implementar en Azure Web App id: deploy-to-webapp uses: azure/webapps-deploy@v2 with: app-name: ${{ secrets.AZURE_APP_NAME }} package: . # Implementar el directorio actual
+         
+        
